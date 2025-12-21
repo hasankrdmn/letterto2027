@@ -1,0 +1,47 @@
+# ------------------------------
+# Frontend (React / Vite)
+# ------------------------------
+
+# Logs
+frontend/logs
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# Node modules & build output
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+
+# Editor / OS files
+frontend/.vscode/*
+!frontend/.vscode/extensions.json
+frontend/.idea
+frontend/.DS_Store
+frontend/*.suo
+frontend/*.ntvs*
+frontend/*.njsproj
+frontend/*.sln
+frontend/*.sw?
+
+
+# ------------------------------
+# Backend (Streamlit / Python)
+# ------------------------------
+
+# Secrets (CRITICAL)
+backend/.streamlit/secrets.toml
+
+# Python cache
+backend/__pycache__/
+backend/*.pyc
+
+# Environment variables
+.env
+
+# OS junk
+.DS_Store
