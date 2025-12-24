@@ -5,6 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Lock, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { sendEncryptedBlob } from '@/lib/submit';
+import { encryptMessage } from '@/lib/crypto';
 
 const MessageForm = () => {
   const { toast } = useToast();
@@ -24,19 +26,46 @@ const MessageForm = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    // 1️⃣ Şifrelenecek payload
+    const payload = JSON.stringify({
+      email: formData.email,
+      title: formData.title,
+      message: formData.message,
+    });
+
+    // 2️⃣ Tarayıcıda şifrele
+    const encryptedBlob = await encryptMessage(
+      payload,
+      formData.password
+    );
+
+    // 3️⃣ Backend'e gönder
+    await sendEncryptedBlob(encryptedBlob);
+
+    // 4️⃣ Başarılı mesaj
     toast({
       title: "🎄 Mesajın geleceğe gönderildi!",
       description: "1 Ocak 2027'de e-postanı kontrol etmeyi unutma.",
     });
-    
+
+    // 5️⃣ Formu temizle
     setFormData({ email: '', title: '', message: '', password: '' });
+
+  } catch (err) {
+    console.error(err);
+    toast({
+      title: "Bir hata oluştu",
+      description: "Mesaj gönderilemedi. Lütfen tekrar dene.",
+      variant: "destructive",
+    });
+  } finally {
     setIsSubmitting(false);
-  };
+  }
+};
 
   return (
     <div className="w-full max-w-lg mx-auto">
